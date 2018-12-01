@@ -1,0 +1,71 @@
+Issue1:
+
+Error encountered, bailing. Network state unknown. Review successful transactions manually.
+Error: exceeds block gas limit
+
+Resolution:
+
+Your value (500000) seems rather low. The default value is 4712388.
+Try with the default or lower it to 4612388. Not sure why but it then worked on my end...
+
+module.exports = {
+  rpc: {
+    host: "localhost",
+    port: 8545
+  },
+  networks: {
+    development: {
+      host: "localhost", //our network is running on localhost
+      port: 8545, // port where your blockchain is running
+      network_id: "*",
+      from: "0xdb47dae2acc89fd252270386962d32c3db833d45", // use the account-id generated during the setup process
+      gas: 4712388
+    }
+  }
+};
+
+
+Issue 2: Testing Deployed Contract
+
+truffle(development)> var dApp
+undefined
+truffle(development)> Calculator.deployed().then(function(instance) { dApp = instance; })
+undefined
+truffle(development)> dApp.result.call();
+TypeError: Cannot read property 'call' of undefined
+truffle(development)> dApp.getResult().call()
+TypeError: dApp.getResult(...).call is not a function
+truffle(development)> dApp.getResult.call()
+BigNumber { s: 1, e: 1, c: [ 10 ] }
+truffle(development)> dApp.addToNumber(5).call()
+TypeError: dApp.addToNumber(...).call is not a function
+truffle(development)> dApp.addToNumber(5).sendTransactiom()
+TypeError: dApp.addToNumber(...).sendTransactiom is not a function
+truffle(development)> dApp.addToNumber.sendTransaction()
+Error: Invalid number of arguments to Solidity function
+    at /usr/local/lib/node_modules/truffle/build/webpack:/packages/truffle-contract/contract.js:126:1
+    at new Promise (<anonymous>)
+    at /usr/local/lib/node_modules/truffle/build/webpack:/packages/truffle-contract/contract.js:135:1
+    at SolidityFunction.sendTransaction (/usr/local/lib/node_modules/truffle/build/webpack:/~/web3/lib/web3/function.js:163:1)
+    at SolidityFunction.toPayload (/usr/local/lib/node_modules/truffle/build/webpack:/~/web3/lib/web3/function.js:90:1)
+    at SolidityFunction.validateArgs (/usr/local/lib/node_modules/truffle/build/webpack:/~/web3/lib/web3/function.js:74:1)
+    at Object.InvalidNumberOfSolidityArgs (/usr/local/lib/node_modules/truffle/build/webpack:/~/web3/lib/web3/errors.js:25:1)
+truffle(development)> dApp.addToNumber.sendTransaction(5)
+'0xfc723e061086e133df52f9280512a347182e444c75a9c387b0b66896c0e8f427'
+truffle(development)> dApp.getResult.call()
+BigNumber { s: 1, e: 1, c: [ 25 ] }
+truffle(development)> dApp.getResult.call()
+BigNumber { s: 1, e: 1, c: [ 25 ] }
+truffle(development)> dApp.addToNumber.sendTransaction(5)
+'0xe100ecd4f35263ab842f25b22f8d11174f79d002b7c1642505b7b7bbb1add5bb'
+truffle(development)> dApp.getResult.call()
+BigNumber { s: 1, e: 1, c: [ 30 ] }
+truffle(development)> dApp.addToNumber.sendTransaction(66)
+'0xb0d1f46c50fc1db43870eeb05a240e10a021fb7e9cc3b3481df167d2c28e5f6e'
+truffle(development)> dApp.getResult.call()
+BigNumber { s: 1, e: 1, c: [ 96 ] }
+truffle(development)> dApp.substractFromNumber.sendTransaction(66)
+'0xd5bc34f3cd83629c61f81cb7179d07738226e5e4fd94e52d8f3ba0adbc43b825'
+truffle(development)> dApp.getResult.call()
+BigNumber { s: 1, e: 1, c: [ 30 ] }
+truffle(development)>
